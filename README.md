@@ -1,0 +1,1 @@
+"# GZCTF-Scoreboard-Hide" 
