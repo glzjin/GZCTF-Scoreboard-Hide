@@ -18,43 +18,48 @@
             const buttons = document.querySelectorAll(selector);
             buttons.forEach(button => {
                 const textDiv = button.querySelector('.mantine-16061ow');
-                if (textDiv && textDiv.textContent.trim() === '积分总榜') {
-                    button.style.display = 'none';
+                if (textDiv) {
+                    const text = textDiv.textContent.trim();
+                    if (text === '积分总榜' || text === 'Scoreboard' || text === 'ランキング') {
+                        button.style.display = 'none';
+                    }
                 }
             });
         });
     }
 
     // Function to hide divs containing specific text
-    function hideDivsContainingText(text) {
+    function hideDivsContainingText(texts) {
         const divs = document.querySelectorAll('div.mantine-Stack-root.mantine-1nmrv06');
         divs.forEach(div => {
-            if (div.textContent.includes(text)) {
-                div.style.display = 'none';
-            }
+            texts.forEach(text => {
+                if (div.textContent.includes(text)) {
+                    div.style.display = 'none';
+                }
+            });
         });
     }
 
-    // Function to check the current URL and hide the button if necessary
-    function checkUrlAndHideButton() {
+    // Function to check the current URL and hide elements if necessary
+    function checkUrlAndHideElements() {
         const currentPath = window.location.pathname;
         const regex = /^\/games\/\d+\/challenges$/;
         if (regex.test(currentPath)) {
             hideButton();
             hideSpecificDiv();
-            // Hide divs containing specific text
-            hideDivsContainingText('支队伍攻克');
+            // Hide divs containing specific text in multiple languages
+            hideDivsContainingText(['支队伍攻克', 'solves', '解決回数']);
         }
     }
 
     // Initial check
-    checkUrlAndHideButton();
+    checkUrlAndHideElements();
 
     // Use MutationObserver to watch for changes in the document
     const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             if (mutation.type === 'childList' || mutation.type === 'attributes') {
-                checkUrlAndHideButton();
+                checkUrlAndHideElements();
             }
         });
     });
@@ -67,5 +72,5 @@
     });
 
     // Also listen to the popstate event to handle back/forward navigation
-    window.addEventListener('popstate', checkUrlAndHideButton);
+    window.addEventListener('popstate', checkUrlAndHideElements);
 })();
